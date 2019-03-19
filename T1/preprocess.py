@@ -18,7 +18,6 @@ def get_saveable(bin):
         for j, pixel in enumerate(row):
             img[i][j] = np.array([255, 255, 255]) if pixel == 0 else np.array(
                 [0, 0, 0])
-    img = cv2.resize(img, dsize=(height, width))
     return img
 
 
@@ -44,10 +43,13 @@ def save_bin(bin, filepath):
 
 
 def crop(bin):
+    h = len(bin)
+    w = len(bin[0])
+
     top = 0
-    bottom = height - 1
+    bottom = h - 1
     left = 0
-    right = width - 1
+    right = w - 1
 
     # fill top
     top_seen = False
@@ -74,7 +76,7 @@ def crop(bin):
     right_seen = False
     for i, row in enumerate(bin):
         left_border = right if right_seen else 0  # reduces execution time
-        j = width - 1
+        j = w - 1
         while left_border < j:
             pixel = row[j]
             if pixel == 1:
@@ -84,7 +86,7 @@ def crop(bin):
             j -= 1
 
     # fill bottom
-    i = height - 1
+    i = h - 1
     bottom_seen = False
     while i >= 0:
         row = bin[i]
@@ -109,6 +111,14 @@ def get_preprocessed_saveable(filename, easy_pr=False):
         easy_print(cropped)
         save_bin(cropped, "TestSet/test2.txt")
     return get_saveable(cropped)
+
+
+def preprocess(X):
+    bin = np.array(X)
+    cropped = crop(bin)
+    img = get_saveable(cropped)
+    res = cv2.resize(img, dsize=(height, width))
+    return get_binary(res)
 
 
 if __name__ == '__main__':
