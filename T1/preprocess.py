@@ -31,6 +31,18 @@ def easy_print(bin):
         print(st)
 
 
+def save_bin(bin, filepath):
+    ans = ""
+    for row in bin:
+        st = ""
+        for pixel in row:
+            c = "0" if pixel == 0 else "1"
+            st += c
+        ans += f"{st}\n"
+    with open(filepath, "w") as file:
+        file.write(ans)
+
+
 def crop(bin):
     top = 0
     bottom = height - 1
@@ -95,6 +107,7 @@ def get_preprocessed_saveable(filename, easy_pr=False):
     cropped = crop(binary)
     if easy_pr:
         easy_print(cropped)
+        save_bin(cropped, "TestSet/test2.txt")
     return get_saveable(cropped)
 
 
