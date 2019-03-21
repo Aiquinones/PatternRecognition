@@ -3,6 +3,7 @@ import cv2
 from constants import height, white_limit, width
 
 
+# Obtiene la imagen binarizada desde una img con rgb
 def get_binary(img, limited=True):
     if limited:
         bin = np.ndarray((height, width))
@@ -14,6 +15,17 @@ def get_binary(img, limited=True):
     return bin
 
 
+# Se lee un txt que contiene 1s y 0s y se traduce a una matriz
+def get_matrix_from_txt(filepath):
+    matrix = []
+    with open(filepath, 'r') as file:
+        for line in [l.strip() for l in file.readlines()]:
+            row = [int(pixel) for pixel in line]
+            matrix.append(row)
+    return matrix
+
+
+# Se obtiene a partir de una imagen binaria una imagen en rgb
 def get_saveable(bin):
     assert (len(bin) > 0), "Can't transform an empty binary picture"
     img = np.ndarray((len(bin), len(bin[0]), 3))
@@ -24,6 +36,7 @@ def get_saveable(bin):
     return img
 
 
+# Imprime en consola una imagen binaria. DEBUGGING AND TESTING
 def easy_print(bin):
     ans = ""
     for row in bin:
@@ -36,6 +49,7 @@ def easy_print(bin):
     return ans
 
 
+# Guarda una imagen binaria en el filepath especificado. DEBUGGING AND TESTING
 def save_bin(bin, filepath):
     ans = ""
     for row in bin:
@@ -48,6 +62,7 @@ def save_bin(bin, filepath):
         file.write(ans)
 
 
+# Se corta la imagen tal que solo quede la letra tocando los bordes
 def crop(bin):
     h = len(bin)
     w = len(bin[0])
@@ -108,6 +123,7 @@ def crop(bin):
     return bin[top:bottom, left:right]
 
 
+# Obtiene una imagen rgb recortada y resizeada
 def get_preprocessed_saveable(filename, easy_pr=False):
     img = cv2.imread(filename)
     res = cv2.resize(img, dsize=(height, width))
@@ -119,6 +135,8 @@ def get_preprocessed_saveable(filename, easy_pr=False):
     return get_saveable(cropped)
 
 
+# preprocesamiento general para una matriz: resize y crop. Retorna una
+# imagen binaria.
 def preprocess(X):
     bin = np.array(X)
     cropped = crop(bin)

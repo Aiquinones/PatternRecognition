@@ -1,14 +1,15 @@
 import sys
-import cv2
 from constants import width, height, fonts, letters
-from preprocess import preprocess, get_binary
+from preprocess import preprocess
 import numpy as np
 
 
+# Obten la matriz a partir del filepath .npy
 def get_matrix(filepath):
     return np.load(filepath)
 
 
+# Obten la matriz a partir del filepath .txt
 def get_matrix_from_txt(filepath):
     matrix = []
     with open(filepath, 'r') as file:
@@ -18,6 +19,8 @@ def get_matrix_from_txt(filepath):
     return matrix
 
 
+# itera en los filtros y considera como correcto la letra del filtro con mayor
+# precision (score).
 def reconocedorSC(mat, printing=False):
     mat = preprocess(mat)
 
@@ -26,10 +29,8 @@ def reconocedorSC(mat, printing=False):
 
     for letter in letters:
         for i, font in enumerate(fonts):
-            filepath = f"GroundTruth/{letter}{i}.png"
-            img = cv2.imread(filepath)
-            img = cv2.resize(img, dsize=(height, width))
-            img = get_binary(img)
+            filepath = f"GroundTruth/binaries/{letter}{i}.txt"
+            img = get_matrix_from_txt(filepath)
 
             score = 0
             for i in range(height):
