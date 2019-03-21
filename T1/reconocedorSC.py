@@ -2,20 +2,16 @@ import sys
 import cv2
 from constants import width, height, fonts, letters
 from preprocess import preprocess, get_binary
+import numpy as np
 
 assert len(sys.argv) > 1, "filepath needed"
 
 
 def get_matrix(filepath):
-    matrix = []
-    with open(filepath, 'r') as file:
-        for line in [l.strip() for l in file.readlines()]:
-            row = [int(pixel) for pixel in line]
-            matrix.append(row)
-    return matrix
+    return np.load(filepath)
 
 
-def reconocedorSC(mat):
+def reconocedorSC(mat, printing=False):
     mat = preprocess(mat)
 
     best_score = 0
@@ -36,7 +32,9 @@ def reconocedorSC(mat):
             score /= height * width
             score *= 100
 
-            print(f"{letter} {font}: {score}%")
+            if printing:
+                print(f"{letter} {font}: {score}%")
+
             if score > best_score:
                 best_score = score
                 best = letter
@@ -45,5 +43,6 @@ def reconocedorSC(mat):
     return 1 if best == 'S' else 0
 
 
-mat = get_matrix(sys.argv[1])
-print(reconocedorSC(mat))
+if __name__ == '__main__':
+    mat = get_matrix(sys.argv[1])
+    print(reconocedorSC(mat))

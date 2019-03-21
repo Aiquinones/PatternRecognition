@@ -22,12 +22,15 @@ def get_saveable(bin):
 
 
 def easy_print(bin):
+    ans = ""
     for row in bin:
         st = ""
         for pixel in row:
-            c = "-" if pixel == 0 else "*"
+            c = "0" if pixel == 0 else "1"
             st += c
         print(st)
+        ans += f"{st}\n"
+    return ans
 
 
 def save_bin(bin, filepath):
