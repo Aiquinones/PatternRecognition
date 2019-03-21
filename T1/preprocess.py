@@ -3,8 +3,11 @@ import cv2
 from constants import height, white_limit, width
 
 
-def get_binary(img):
-    bin = np.ndarray((height, width))
+def get_binary(img, limited=True):
+    if limited:
+        bin = np.ndarray((height, width))
+    else:
+        bin = np.ndarray((len(img), len(img[0])))
     for i, row in enumerate(img):
         for j, pixel in enumerate(row):
             bin[i][j] = 0 if np.mean(pixel) >= white_limit else 1

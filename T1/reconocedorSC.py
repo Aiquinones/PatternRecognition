@@ -4,11 +4,18 @@ from constants import width, height, fonts, letters
 from preprocess import preprocess, get_binary
 import numpy as np
 
-assert len(sys.argv) > 1, "filepath needed"
-
 
 def get_matrix(filepath):
     return np.load(filepath)
+
+
+def get_matrix_from_txt(filepath):
+    matrix = []
+    with open(filepath, 'r') as file:
+        for line in [l.strip() for l in file.readlines()]:
+            row = [int(pixel) for pixel in line]
+            matrix.append(row)
+    return matrix
 
 
 def reconocedorSC(mat, printing=False):
@@ -44,5 +51,7 @@ def reconocedorSC(mat, printing=False):
 
 
 if __name__ == '__main__':
+    assert len(sys.argv) > 1, "filepath needed"
+
     mat = get_matrix(sys.argv[1])
     print(reconocedorSC(mat))
