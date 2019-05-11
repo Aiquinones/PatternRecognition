@@ -21,7 +21,8 @@ kernel, gamma, c, degree, bar_length=20):
     sys.stdout.flush()
 
 #%% Creamos variables para los datos que usaremos.
-M = loadmat('T4/xdata.mat')
+filepath  = 'xdata.mat'
+M = loadmat(filepath)
 
 Xtest = M['Xtest']
 Xtrain = M['Xtrain']

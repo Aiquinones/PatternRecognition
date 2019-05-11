@@ -12,7 +12,8 @@ import time
 # de train y validation, dividiéndolo luego en la misma proporción.
 #  Esto para que sea aceptado como input al GridSearchCV
 #  
-M = loadmat('T4/xdata.mat')
+filepath  = 'xdata.mat'
+M = loadmat(filepath)
 
 Xtest = M['Xtest']
 Xtrain = M['Xtrain']
