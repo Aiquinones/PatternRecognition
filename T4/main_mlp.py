@@ -1,4 +1,4 @@
-#%%
+#%% Primero importamos las librerías que usaremos 
 import numpy as np
 from scipy.io import loadmat
 from sklearn.neural_network import MLPClassifier
@@ -7,7 +7,11 @@ from functools import reduce
 import sys
 import time
 
-#%%
+#%% Creamos variables para los datos que usaremos. Bajo la
+# autorización del profesor, se permitió mezclar las datasets
+# de train y validation, dividiéndolo luego en la misma proporción.
+#  Esto para que sea aceptado como input al GridSearchCV
+#  
 M = loadmat('T4/xdata.mat')
 
 Xtest = M['Xtest']
@@ -20,7 +24,10 @@ yval = M['yval']
 Xfit = np.concatenate((Xtrain, Xval))
 yfit = np.concatenate((ytrain, yval)).ravel()
 
-#%%
+#%% Creamos el diccionario tracking_val, donde se rastreará el resultado
+# de cada iteración para determinar los mejores hiperparámetros. Además se
+# genera el espacio de los parámetro, en donde se especifica en qué valores
+# iterar
 
 layers = [(50,50,50), (50,100,50), (8,8,8), (8,10,8)]
 layers_names = ['(50,50,50)', '(50,100,50)', '(8,8,8)', '(8,10,8)']
@@ -49,7 +56,7 @@ parameter_space = {
     'learning_rate': ['constant','adaptive'],
 }
 
-#%%
+#%% Se itera el entrenamiento del modelo para obtener la mejor combinación de hiperparámetros
 
 startTime = time.time()
 cv = [(slice(None), slice(None))] # Hack para no hacer cv
@@ -58,7 +65,7 @@ clf = GridSearchCV(mlp, parameter_space, n_jobs=-1, cv=cv)
 clf.fit(Xfit, yfit)
 print("--- %s seconds ---" % (time.time() - startTime))
 
-#%%
+#%% Se guardan los resultados en tracking_val_mlp
 accs_val = clf.cv_results_['mean_test_score']
 for acc_val, params in zip(accs_val, clf.cv_results_['params']):
     layer = layers_names[layers.index(params['hidden_layer_sizes'])]
@@ -72,6 +79,3 @@ tracking_val['acc'] = clf.score(Xtest, ytest)
 import json
 with open('tracking_val_mlp.json', 'w') as outfile:
     json.dump(tracking_val, outfile)
-
-#%%
-clf.best_params_
