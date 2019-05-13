@@ -1,0 +1,3 @@
+Se asume que el dataset está en un archivo llamado 'xdata.mat'
+Este se debe ubicar en la misma carpeta que el código (El filepath
+relativo también es 'xdata.mat')
